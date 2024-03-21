@@ -7,32 +7,34 @@
  *
  * Return: Return the updated list
  */
-
 dlistint_t *add_dnodeint_end(dlistint_t **head, const int n)
 {
-	dlistint_t *newNode;
-	dlistint_t *temp = *head;
+	/*declarations */
+	dlistint_t *new = malloc(sizeof(dlistint_t));
+	dlistint_t *location;
 
-	newNode = malloc(sizeof(dlistint_t));
-	if (newNode == NULL)
+	/* check for null && malloc fail, free new if it exists, return NULL */
+	if (!head || !new)
+		return (new ? free(new), NULL : NULL);
+	/* assign some things to new */
+	new->n = n;
+	new->next = NULL;
+	/* if there are no other nodes make new the first and last */
+	if (!*head)
 	{
-		return (NULL);
+		new->prev = NULL;
+		*head = new;
 	}
-	newNode->n = n;
-	newNode->next = NULL;
-
-	if (*head == NULL)
+	/* otherwise, find the end and install new */
+	else
 	{
-		newNode->prev = NULL;
-		*head = newNode;
+		location = *head;
+		while (location->next)
+		{
+			location = location->next;
+		}
+		location->next = new;
+		new->prev = location;
 	}
-
-	while (temp->next != NULL)
-	{
-		temp = temp->next;
-	}
-	temp->next = newNode;
-	newNode->prev = temp;
-
-	return (newNode);
+	return (new);
 }
